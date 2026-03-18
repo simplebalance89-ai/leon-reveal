@@ -4,10 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hey Leon</title>
-<!-- Music -->
-<iframe id="music" width="0" height="0" style="display:none;" allow="autoplay" src=""></iframe>
-<!-- Toy Story low on landing - YouTube embed with low volume via API -->
-<div id="toy-story-player" style="position:absolute;top:-9999px;"></div>
+<!-- Spotify Player - fixed bottom -->
+<div id="spotify-bar" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999; background:#111; border-top:1px solid #333; padding:8px 16px;">
+  <div style="display:flex; align-items:center; justify-content:space-between; max-width:800px; margin:0 auto;">
+    <p class="mono dim" style="font-size:10px; margin:0;">NOW PLAYING</p>
+    <div id="spotify-tracks" style="display:flex; gap:8px;">
+      <button class="spotify-pick active-track" onclick="switchTrack('7vVDLJnYmoj5SvVD9T81Vo', this)" style="background:none;border:1px solid #00ff41;color:#00ff41;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:3px;">Urban Train</button>
+      <button class="spotify-pick" onclick="switchTrack('68HjoITExLsYeKbfxZ2VsU', this)" style="background:none;border:1px solid #333;color:#888;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:3px;">Urban Train (ASOT)</button>
+      <button class="spotify-pick" onclick="switchTrack('1mEkvv5TaNNVsj5GEjVnKX', this)" style="background:none;border:1px solid #333;color:#888;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:3px;">Cosmic Gate Remix</button>
+      <button class="spotify-pick" onclick="switchTrack('6pkSEqfTFyoqaPXQ1d4nLp', this)" style="background:none;border:1px solid #333;color:#888;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:3px;">Bring Me To Life</button>
+    </div>
+  </div>
+  <iframe id="spotify-player" style="border-radius:8px;margin-top:8px;width:100%;max-width:800px;display:block;margin-left:auto;margin-right:auto;" src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</div>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&display=swap');
 
@@ -545,33 +554,25 @@ tr:hover td { background: #1a1a1a; }
 </div>
 
 <script>
-let toyPlayer = null;
-
-// Load YouTube IFrame API
-const tag = document.createElement('script');
-tag.src = 'https://www.youtube.com/iframe_api';
-document.head.appendChild(tag);
-
-function onYouTubeIframeAPIReady() {
-  // You've Got a Friend in Me - low volume on page load
-  toyPlayer = new YT.Player('toy-story-player', {
-    height: '0',
-    width: '0',
-    videoId: 'Zy4uiiy0qgA',
-    playerVars: { autoplay: 1, loop: 1, playlist: 'Zy4uiiy0qgA', controls: 0 },
-    events: {
-      onReady: function(e) {
-        e.target.setVolume(15); // 15% volume - nice and low
-        e.target.playVideo();
-      }
-    }
-  });
+function startMusic() {
+  // Show Spotify bar and load Urban Train
+  document.getElementById('spotify-bar').style.display = 'block';
+  document.getElementById('spotify-player').src = 'https://open.spotify.com/embed/track/7vVDLJnYmoj5SvVD9T81Vo?utm_source=generator&theme=0&autoplay=1';
+  // Add bottom padding to body so content isn't hidden behind player
+  document.body.style.paddingBottom = '120px';
 }
 
-function startMusic() {
-  // Kill Toy Story, start Tiesto - Urban Train
-  if (toyPlayer && toyPlayer.stopVideo) toyPlayer.stopVideo();
-  document.getElementById('music').src = 'https://www.youtube.com/embed/bl6RJGZfSes?autoplay=1&loop=1&playlist=bl6RJGZfSes&controls=0';
+function switchTrack(trackId, btn) {
+  document.getElementById('spotify-player').src = 'https://open.spotify.com/embed/track/' + trackId + '?utm_source=generator&theme=0&autoplay=1';
+  // Update active button style
+  document.querySelectorAll('.spotify-pick').forEach(b => {
+    b.style.borderColor = '#333';
+    b.style.color = '#888';
+    b.classList.remove('active-track');
+  });
+  btn.style.borderColor = '#00ff41';
+  btn.style.color = '#00ff41';
+  btn.classList.add('active-track');
 }
 
 let wrongClicks = 0;
