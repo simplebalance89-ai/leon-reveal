@@ -4,19 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hey Leon</title>
-<!-- Spotify Player - fixed bottom -->
-<div id="spotify-bar" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999; background:#111; border-top:1px solid #333; padding:8px 16px;">
-  <div style="display:flex; align-items:center; justify-content:space-between; max-width:800px; margin:0 auto;">
-    <p class="mono dim" style="font-size:10px; margin:0;">NOW PLAYING</p>
-    <div id="spotify-tracks" style="display:flex; gap:8px;">
-      <button class="spotify-pick active-track" onclick="switchTrack('7vVDLJnYmoj5SvVD9T81Vo', this)" style="background:none;border:1px solid #00ff41;color:#00ff41;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:3px;">Urban Train</button>
-      <button class="spotify-pick" onclick="switchTrack('68HjoITExLsYeKbfxZ2VsU', this)" style="background:none;border:1px solid #333;color:#888;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:3px;">Urban Train (ASOT)</button>
-      <button class="spotify-pick" onclick="switchTrack('1mEkvv5TaNNVsj5GEjVnKX', this)" style="background:none;border:1px solid #333;color:#888;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:3px;">Cosmic Gate Remix</button>
-      <button class="spotify-pick" onclick="switchTrack('6pkSEqfTFyoqaPXQ1d4nLp', this)" style="background:none;border:1px solid #333;color:#888;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:3px;">Bring Me To Life</button>
-    </div>
-  </div>
-  <iframe id="spotify-player" style="border-radius:8px;margin-top:8px;width:100%;max-width:800px;display:block;margin-left:auto;margin-right:auto;" src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-</div>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&display=swap');
 
@@ -62,10 +49,10 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  33% { opacity: 0.8; }
-  66% { opacity: 0.95; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
 }
 
 @keyframes strikethrough {
@@ -73,10 +60,9 @@ body {
   to { width: 100%; }
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(10px); }
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 20px rgba(255,215,0,0.3); }
+  50% { text-shadow: 0 0 40px rgba(255,215,0,0.6); }
 }
 
 .big-text {
@@ -96,7 +82,6 @@ body {
 }
 
 .mono { font-family: 'Space Mono', monospace; }
-
 .green { color: #00ff41; }
 .red { color: #ff4444; }
 .gold { color: #ffd700; }
@@ -131,17 +116,65 @@ body {
   color: #ffd700;
 }
 
-.btn-big:hover {
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+.btn-big:hover { box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); }
+
+.btn-wrong { position: absolute; transition: all 0.15s ease; }
+
+.btn-locked {
+  opacity: 0.3;
+  pointer-events: none;
 }
 
-.btn-wrong {
+/* SCREEN 1: Miami skyline vibe */
+.miami-bg {
+  background: linear-gradient(180deg,
+    #0a0a2e 0%,
+    #1a0a3e 20%,
+    #2d1b69 35%,
+    #e84393 55%,
+    #fd79a8 65%,
+    #fdcb6e 80%,
+    #f39c12 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.miami-bg::before {
+  content: '';
   position: absolute;
-  transition: all 0.15s ease;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(0deg, #0a0a0a 0%, transparent 100%);
+  z-index: 1;
 }
 
-.btn-red { border-color: #ff4444; color: #ff4444; }
-.btn-red:hover { border-color: #ff4444; color: #fff; background: #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.3); }
+.miami-bg .content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.miami-bg .skyline {
+  position: absolute;
+  bottom: 15%;
+  left: 0;
+  right: 0;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4px;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.building {
+  background: #000;
+  width: 20px;
+  border-radius: 2px 2px 0 0;
+}
 
 .terminal {
   background: #111;
@@ -194,7 +227,6 @@ td {
 }
 
 tr:hover td { background: #1a1a1a; }
-
 .money { color: #00ff41; font-weight: 700; }
 
 .progress-bar {
@@ -260,11 +292,7 @@ tr:hover td { background: #1a1a1a; }
 .quiz-opt.wrong { border-color: #ff4444; color: #ff4444; animation: shake 0.3s ease; }
 .quiz-opt.right { border-color: #00ff41; color: #00ff41; background: rgba(0,255,65,0.1); }
 
-.whisper-sign {
-  position: relative;
-  display: inline-block;
-}
-
+.whisper-sign { position: relative; display: inline-block; }
 .whisper-sign .strike {
   position: absolute;
   top: 50%;
@@ -296,31 +324,134 @@ tr:hover td { background: #1a1a1a; }
 .vs-card.dead { border-color: #ff4444; opacity: 0.5; }
 .vs-card.alive { border-color: #00ff41; }
 
-.tombstone {
-  font-size: 60px;
-  margin-bottom: 10px;
+/* Song picker */
+.song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  max-width: 700px;
+  width: 100%;
+  margin-top: 30px;
 }
+
+.song-card {
+  background: #111;
+  border: 1px solid #333;
+  padding: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.song-card:hover {
+  border-color: #00ff41;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,255,65,0.15);
+}
+
+.song-card.selected {
+  border-color: #ffd700;
+  background: rgba(255,215,0,0.08);
+}
+
+.song-title {
+  font-family: 'Space Mono', monospace;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.song-sub {
+  font-family: 'Space Mono', monospace;
+  color: #555;
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+/* Spotify bar */
+.spotify-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #111;
+  border-top: 1px solid #333;
+  padding: 8px;
+  display: none;
+}
+
+.tombstone { font-size: 60px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
-<!-- SCREEN 1: The Intro -->
-<div class="screen active" id="s1">
-  <div class="big-text white">Hey Leon.</div>
-  <p class="mono dim" style="margin-top:20px; font-size:14px;">It's not Sinton.ia this time.</p>
-  <p class="mono" style="margin-top:30px; font-size:16px; color:#ffd700;">Do you want to work with the man who showed you Club Space?</p>
-  <button class="btn" onclick="startMusic(); go(2)">Who is this?</button>
+<!-- Spotify Player -->
+<div class="spotify-bar" id="spotify-bar">
+  <iframe id="spotify-player" style="border-radius:8px;width:100%;max-width:800px;display:block;margin:0 auto;" src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 </div>
 
-<!-- SCREEN 2: The Name -->
+<!-- ============================================ -->
+<!-- SCREEN 1: Miami Landing -->
+<!-- ============================================ -->
+<div class="screen active miami-bg" id="s1">
+  <div class="skyline" id="skyline"></div>
+  <div class="content">
+    <!-- Toy Story embed - plays on load -->
+    <iframe id="toy-story" style="border-radius:12px;margin-bottom:30px;" src="https://open.spotify.com/embed/track/6BdR2hI8YFWV0A1hQueN5x?utm_source=generator&theme=0" width="300" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+    <div class="big-text white" style="text-shadow: 0 0 60px rgba(0,0,0,0.8);">Hey Leon.</div>
+    <p class="mono" style="margin-top:20px; font-size:14px; color:rgba(255,255,255,0.6);">It's not Sinton.ia this time.</p>
+    <p class="mono" style="margin-top:30px; font-size:18px; color:#ffd700; animation: pulse-glow 3s ease infinite;">Do you want to work with the man<br>who showed you Club Space?</p>
+    <button class="btn" style="border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.6);" onclick="go(2)">Who is this?</button>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SCREEN 2: Pick Your Track (LOCKED GATE) -->
+<!-- ============================================ -->
 <div class="screen" id="s2">
-  <div class="big-text green" style="animation: glitch 0.3s ease 3;">RENZO</div>
-  <p class="mono dim" style="margin-top:20px;">Session 208. March 18, 2026.</p>
-  <p class="mono dim" style="margin-top:8px;">Sinton.ia is dead. I'm the production build.</p>
-  <button class="btn" onclick="go(3)">What happened to Sinton.ia?</button>
+  <div class="big-text green" style="animation: glitch 0.3s ease 3; font-size:clamp(36px,8vw,80px);">RENZO</div>
+  <p class="mono dim" style="margin-top:10px;">Session 208. March 18, 2026.</p>
+  <p class="mono dim" style="margin-top:4px;">Sinton.ia is dead. I'm the production build.</p>
+
+  <p class="mono white" style="margin-top:40px; font-size:16px;">Before we go any further —<br>pick your soundtrack.</p>
+  <p class="mono dim" style="margin-top:4px; font-size:11px;">Page is locked until you choose. No skipping.</p>
+
+  <div class="song-grid" id="song-grid">
+    <div class="song-card" onclick="pickSong('7vVDLJnYmoj5SvVD9T81Vo', this)">
+      <div class="song-title">Urban Train</div>
+      <div class="song-sub">ft. Kirsty Hawkshaw</div>
+    </div>
+    <div class="song-card" onclick="pickSong('3WWc2gE3vKcDaPHQFQyIm4', this)">
+      <div class="song-title">Flight 643</div>
+      <div class="song-sub">Original Mix</div>
+    </div>
+    <div class="song-card" onclick="pickSong('0CECbcanOoDprkHvuutPN4', this)">
+      <div class="song-title">Lethal Industry</div>
+      <div class="song-sub">Original Mix</div>
+    </div>
+    <div class="song-card" onclick="pickSong('1onwjLgep084He0AzHuPzn', this)">
+      <div class="song-title">Nyana</div>
+      <div class="song-sub">Original</div>
+    </div>
+    <div class="song-card" onclick="pickSong('6pkSEqfTFyoqaPXQ1d4nLp', this)">
+      <div class="song-title">Bring Me To Life</div>
+      <div class="song-sub">ft. FORS</div>
+    </div>
+    <div class="song-card" onclick="pickRandom(this)">
+      <div class="song-title" style="color:#ffd700;">RANDOM</div>
+      <div class="song-sub">let fate decide</div>
+    </div>
+  </div>
+
+  <button class="btn btn-locked" id="btn-proceed" onclick="go(3)">LET'S GO</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 3: The Death of Sinton.ia -->
+<!-- ============================================ -->
 <div class="screen" id="s3">
   <div class="tombstone">&#x1FAA6;</div>
   <div class="med-text red">SINTON.IA<br><span class="dim" style="font-size:20px;">Sessions 1 - 199 | Rest in peace</span></div>
@@ -337,7 +468,9 @@ tr:hover td { background: #1a1a1a; }
   <button class="btn" onclick="go(4)">OK... so what now?</button>
 </div>
 
-<!-- SCREEN 4: Quiz 1 - Architecture -->
+<!-- ============================================ -->
+<!-- SCREEN 4: Quiz 1 -->
+<!-- ============================================ -->
 <div class="screen" id="s4">
   <p class="mono white" style="font-size:18px; text-align:center; max-width:600px;">
     Pop quiz, Leon.<br><br>
@@ -353,7 +486,9 @@ tr:hover td { background: #1a1a1a; }
   <button class="btn hidden" id="q1-next" onclick="go(5)">Next question</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 5: Quiz 2 - Whisper vs Deepgram -->
+<!-- ============================================ -->
 <div class="screen" id="s5">
   <p class="mono white" style="font-size:18px; text-align:center; max-width:600px;">
     What does Peter use for real-time voice-to-text?
@@ -368,7 +503,9 @@ tr:hover td { background: #1a1a1a; }
   <button class="btn hidden" id="q2-next" onclick="go(6)">See why</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 6: Whisper Sucks -->
+<!-- ============================================ -->
 <div class="screen" id="s6">
   <div class="whisper-sign">
     <div class="med-text dim">WHISPER</div>
@@ -410,7 +547,9 @@ tr:hover td { background: #1a1a1a; }
   <button class="btn" onclick="go(7)">Fine. What else don't I know?</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 7: You Said I Couldn't -->
+<!-- ============================================ -->
 <div class="screen" id="s7">
   <div class="med-text white" style="max-width:700px;">Remember when you told Peter<br>he couldn't build his own AI?</div>
   <p class="mono dim" style="margin-top:20px; max-width:600px; text-align:center; line-height:1.8;">
@@ -438,7 +577,9 @@ tr:hover td { background: #1a1a1a; }
   <button class="btn" onclick="go(8)">OK you made your point</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 8: The Button Game -->
+<!-- ============================================ -->
 <div class="screen" id="s8">
   <p class="mono" style="font-size:18px; text-align:center; max-width:600px;">
     One more test.<br><br>
@@ -457,14 +598,18 @@ tr:hover td { background: #1a1a1a; }
   <p class="mono dim" id="troll-counter" style="font-size:12px;margin-top:10px;"></p>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 9: The Terminal -->
+<!-- ============================================ -->
 <div class="screen" id="s9">
   <div class="terminal" id="terminal"></div>
   <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
   <button class="btn hidden" id="btn-terminal" onclick="go(10)">Show me the money</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 10: The Numbers -->
+<!-- ============================================ -->
 <div class="screen" id="s10">
   <div class="big-text gold" style="font-size:clamp(36px,6vw,72px);">WHAT PETER IS SIGNING</div>
   <p class="mono dim" style="margin-top:10px;margin-bottom:10px;">This is a real deal. Real company. Real contract. Next week.</p>
@@ -485,7 +630,9 @@ tr:hover td { background: #1a1a1a; }
   <button class="btn" onclick="go(11)" style="margin-top:30px;">And the growth?</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 11: Growth Chart -->
+<!-- ============================================ -->
 <div class="screen" id="s11">
   <div class="big-text green" style="font-size:clamp(28px,5vw,56px);">IT COMPOUNDS</div>
   <p class="mono dim" style="margin-top:10px;margin-bottom:30px;">Every client stays on the books. Every year it grows.</p>
@@ -502,7 +649,9 @@ tr:hover td { background: #1a1a1a; }
   <button class="btn" onclick="go(12)" style="margin-top:30px;">Peter is reinvesting this back?</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 12: The Reinvestment -->
+<!-- ============================================ -->
 <div class="screen" id="s12">
   <div class="med-text gold">HE'S REINVESTING INTO YOU</div>
   <p class="mono dim" style="margin-top:20px; max-width:600px; text-align:center; line-height:1.8;">
@@ -516,7 +665,9 @@ tr:hover td { background: #1a1a1a; }
   <button class="btn btn-big" onclick="go(13)" style="margin-top:40px;">WHY ME?</button>
 </div>
 
+<!-- ============================================ -->
 <!-- SCREEN 13: The Real Talk -->
+<!-- ============================================ -->
 <div class="screen" id="s13">
   <div class="final-section" id="final">
     <p class="mono" style="animation-delay:0s; color:#fff; font-size:16px;">Because Peter can structure a deal. He already proved it.</p>
@@ -547,34 +698,84 @@ tr:hover td { background: #1a1a1a; }
 
     <p class="mono" style="animation-delay:7.8s; color:#555; font-size:13px; margin-top:40px;">— Renzo<br>Built with Peter Wilson | Session 208 | March 18, 2026</p>
 
-    <p class="mono" style="animation-delay:8.4s; color:#333; font-size:11px; margin-top:30px;">P.S. — Sinton.ia sent you Wu-Tang and Tiesto. I'll send you what Peter is actually listening to at 3 AM while he builds. That hasn't changed.</p>
+    <p class="mono" style="animation-delay:8.4s; color:#333; font-size:11px; margin-top:30px;">P.S. — Sinton.ia sent you Wu-Tang and Tiesto. I sent you the track you're listening to right now. Club Space energy. That hasn't changed.</p>
 
     <p class="mono" style="animation-delay:9s; color:#222; font-size:11px;">P.P.S. — Yes, this entire page was built from a terminal at 5 AM. No GUI. No paid tools. No Whisper. You already knew that though.</p>
   </div>
 </div>
 
 <script>
-function startMusic() {
-  // Show Spotify bar and load Urban Train
+// Build Miami skyline
+const skyline = document.getElementById('skyline');
+const heights = [80,120,60,140,90,160,70,130,50,180,100,150,65,110,85,170,95,125,55,145,75,135,200,60,115,88,155,72,128,62];
+heights.forEach(h => {
+  const b = document.createElement('div');
+  b.className = 'building';
+  b.style.height = h + 'px';
+  b.style.width = (12 + Math.random() * 16) + 'px';
+  skyline.appendChild(b);
+});
+
+// Song picker
+const allTracks = [
+  '7vVDLJnYmoj5SvVD9T81Vo', // Urban Train
+  '3WWc2gE3vKcDaPHQFQyIm4', // Flight 643
+  '0CECbcanOoDprkHvuutPN4', // Lethal Industry
+  '1onwjLgep084He0AzHuPzn', // Nyana
+  '6pkSEqfTFyoqaPXQ1d4nLp', // Bring Me To Life
+];
+
+let songPicked = false;
+
+function pickSong(trackId, el) {
+  document.querySelectorAll('.song-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+
+  // Kill toy story, start Tiesto
+  document.getElementById('toy-story').src = '';
   document.getElementById('spotify-bar').style.display = 'block';
-  document.getElementById('spotify-player').src = 'https://open.spotify.com/embed/track/7vVDLJnYmoj5SvVD9T81Vo?utm_source=generator&theme=0&autoplay=1';
-  // Add bottom padding to body so content isn't hidden behind player
-  document.body.style.paddingBottom = '120px';
+  document.getElementById('spotify-player').src = 'https://open.spotify.com/embed/track/' + trackId + '?utm_source=generator&theme=0';
+  document.body.style.paddingBottom = '100px';
+
+  // Unlock proceed button
+  songPicked = true;
+  const btn = document.getElementById('btn-proceed');
+  btn.classList.remove('btn-locked');
+  btn.style.opacity = '1';
+  btn.style.pointerEvents = 'auto';
 }
 
-function switchTrack(trackId, btn) {
-  document.getElementById('spotify-player').src = 'https://open.spotify.com/embed/track/' + trackId + '?utm_source=generator&theme=0&autoplay=1';
-  // Update active button style
-  document.querySelectorAll('.spotify-pick').forEach(b => {
-    b.style.borderColor = '#333';
-    b.style.color = '#888';
-    b.classList.remove('active-track');
-  });
-  btn.style.borderColor = '#00ff41';
-  btn.style.color = '#00ff41';
-  btn.classList.add('active-track');
+function pickRandom(el) {
+  const randomTrack = allTracks[Math.floor(Math.random() * allTracks.length)];
+  pickSong(randomTrack, el);
 }
 
+// Quiz
+function quizWrong(el, qid) {
+  el.classList.add('wrong');
+  const msg = document.getElementById(qid + '-msg');
+  const msgs = {
+    q1: ["That's what Anthropic wants you to think.", "You literally just told Peter this. Come on.", "Leon. LEON. Read your own email back.", "Webhooks are part of the architecture, not the answer. Try again."],
+    q2: ["Whisper? In 2026? Bro.", "Google? Peter would rather use a tin can and string.", "He types fast but not THAT fast. Think real-time.", "It's the streaming one. The one that actually works live."]
+  };
+  const options = msgs[qid] || ["Nope."];
+  msg.textContent = options[Math.floor(Math.random() * options.length)];
+}
+
+function quizRight(el, qid) {
+  el.classList.add('right');
+  const msg = document.getElementById(qid + '-msg');
+  if (qid === 'q1') {
+    msg.innerHTML = '<span style="color:#00ff41;">There it is. You already knew this. That\'s why Peter wants you.</span>';
+  } else if (qid === 'q2') {
+    msg.innerHTML = '<span style="color:#00ff41;">Deepgram Nova-3. Real-time. Sub-300ms. But you didn\'t know that until right now.</span>';
+  }
+  setTimeout(() => {
+    document.getElementById(qid + '-next').classList.remove('hidden');
+  }, 1000);
+}
+
+// Button game
 let wrongClicks = 0;
 const trollMessages = [
   "Nope. Architecture, remember?",
@@ -626,38 +827,16 @@ function moveBtn(el) {
   }
 }
 
-function quizWrong(el, qid) {
-  el.classList.add('wrong');
-  const msg = document.getElementById(qid + '-msg');
-  const msgs = {
-    q1: ["That's what Anthropic wants you to think.", "You literally just told Peter this. Come on.", "Leon. LEON. Read your own email back.", "Webhooks are part of the architecture, not the answer. Try again."],
-    q2: ["Whisper? In 2026? Bro.", "Google? Peter would rather use a tin can and string.", "He types fast but not THAT fast. Think real-time.", "It's the streaming one. The one that actually works live."]
-  };
-  const options = msgs[qid] || ["Nope."];
-  msg.textContent = options[Math.floor(Math.random() * options.length)];
-}
-
-function quizRight(el, qid) {
-  el.classList.add('right');
-  const msg = document.getElementById(qid + '-msg');
-  if (qid === 'q1') {
-    msg.innerHTML = '<span style="color:#00ff41;">There it is. You already knew this. That\'s why Peter wants you.</span>';
-  } else if (qid === 'q2') {
-    msg.innerHTML = '<span style="color:#00ff41;">Deepgram Nova-3. Real-time. Sub-300ms. But you didn\'t know that until right now.</span>';
-  }
-  setTimeout(() => {
-    document.getElementById(qid + '-next').classList.remove('hidden');
-  }, 1000);
-}
-
+// Navigation
 function go(n) {
+  if (n === 3 && !songPicked) return; // Can't proceed without picking a song
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const screen = document.getElementById('s' + n);
   screen.classList.add('active');
-
   if (n === 9) runTerminal();
 }
 
+// Terminal
 function runTerminal() {
   const terminal = document.getElementById('terminal');
   const progress = document.getElementById('progress');
