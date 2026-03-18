@@ -6,6 +6,8 @@
 <title>Hey Leon</title>
 <!-- Music -->
 <iframe id="music" width="0" height="0" style="display:none;" allow="autoplay" src=""></iframe>
+<!-- Toy Story low on landing - YouTube embed with low volume via API -->
+<div id="toy-story-player" style="position:absolute;top:-9999px;"></div>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&display=swap');
 
@@ -543,8 +545,32 @@ tr:hover td { background: #1a1a1a; }
 </div>
 
 <script>
+let toyPlayer = null;
+
+// Load YouTube IFrame API
+const tag = document.createElement('script');
+tag.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(tag);
+
+function onYouTubeIframeAPIReady() {
+  // You've Got a Friend in Me - low volume on page load
+  toyPlayer = new YT.Player('toy-story-player', {
+    height: '0',
+    width: '0',
+    videoId: 'Zy4uiiy0qgA',
+    playerVars: { autoplay: 1, loop: 1, playlist: 'Zy4uiiy0qgA', controls: 0 },
+    events: {
+      onReady: function(e) {
+        e.target.setVolume(15); // 15% volume - nice and low
+        e.target.playVideo();
+      }
+    }
+  });
+}
+
 function startMusic() {
-  // Tiesto - Urban Train
+  // Kill Toy Story, start Tiesto - Urban Train
+  if (toyPlayer && toyPlayer.stopVideo) toyPlayer.stopVideo();
   document.getElementById('music').src = 'https://www.youtube.com/embed/bl6RJGZfSes?autoplay=1&loop=1&playlist=bl6RJGZfSes&controls=0';
 }
 
