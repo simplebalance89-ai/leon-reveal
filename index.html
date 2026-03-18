@@ -702,10 +702,133 @@ tr:hover td { background: #1a1a1a; }
     <p class="mono" style="animation-delay:8.4s; color:#333; font-size:11px; margin-top:30px;">P.S. — Sinton.ia sent you Wu-Tang and Tiesto. I sent you the track you're listening to right now. Club Space energy. That hasn't changed.</p>
 
     <p class="mono" style="animation-delay:9s; color:#222; font-size:11px;">P.P.S. — Yes, this entire page was built from a terminal at 5 AM. No GUI. No paid tools. No Whisper. You already knew that though.</p>
+
+    <button class="btn btn-big" style="animation-delay:9.5s; opacity:0; animation: slideUp 0.5s ease 9.5s forwards;" onclick="go(14)">CAPISCE?</button>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SCREEN 14: The Table — Submit -->
+<!-- ============================================ -->
+<div class="screen" id="s14" style="position:relative; overflow:hidden;">
+  <!-- Italian words running down left side -->
+  <div style="position:fixed;left:12px;top:0;bottom:100px;display:flex;flex-direction:column;justify-content:space-around;z-index:0;pointer-events:none;">
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;transform:rotate(180deg);">CAPISCE</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;transform:rotate(180deg);">FAMIGLIA</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;transform:rotate(180deg);">TAVOLA</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;transform:rotate(180deg);">ONORE</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;transform:rotate(180deg);">FIDUCIA</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;transform:rotate(180deg);">CAPO</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;transform:rotate(180deg);">RISPETTO</span>
+  </div>
+  <!-- Italian words running down right side -->
+  <div style="position:fixed;right:12px;top:0;bottom:100px;display:flex;flex-direction:column;justify-content:space-around;z-index:0;pointer-events:none;">
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;">FRATELLO</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;">DESTINO</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;">COSTRUIRE</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;">LEALTA</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;">SANGUE</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;">SOGNO</span>
+    <span class="mono" style="color:#1a1a1a;font-size:11px;writing-mode:vertical-lr;">IMPERIO</span>
+  </div>
+
+  <div style="position:relative;z-index:1;text-align:center;max-width:600px;">
+    <div class="med-text gold" style="animation: pulse-glow 3s ease infinite;">LA TAVOLA</div>
+    <p class="mono dim" style="margin-top:8px; font-size:12px; font-style:italic;">The table is set. Take your seat.</p>
+
+    <div style="margin-top:40px;">
+      <p class="mono white" style="font-size:14px; margin-bottom:20px;">What do you want to bring to the table?</p>
+
+      <textarea id="leon-response" placeholder="Your role. Your vision. Your title. Whatever is in your head — drop it here." style="
+        width:100%;
+        max-width:500px;
+        height:150px;
+        background:#111;
+        border:1px solid #333;
+        border-radius:8px;
+        color:#fff;
+        font-family:'Space Mono',monospace;
+        font-size:13px;
+        padding:16px;
+        resize:vertical;
+        outline:none;
+      "></textarea>
+
+      <br>
+
+      <p class="mono dim" style="margin-top:20px; font-size:12px;">Or send your resume / portfolio — whatever you got:</p>
+
+      <label style="
+        display:inline-block;
+        margin-top:10px;
+        background:#111;
+        border:1px solid #333;
+        border-radius:6px;
+        padding:12px 24px;
+        cursor:pointer;
+        font-family:'Space Mono',monospace;
+        font-size:12px;
+        color:#888;
+        transition:all 0.3s ease;
+      " onmouseover="this.style.borderColor='#00ff41';this.style.color='#00ff41'" onmouseout="this.style.borderColor='#333';this.style.color='#888'">
+        UPLOAD FILE
+        <input type="file" id="leon-file" style="display:none;" onchange="fileSelected(this)">
+      </label>
+      <p class="mono dim" id="file-name" style="margin-top:8px; font-size:10px;"></p>
+
+      <br>
+
+      <button class="btn btn-big" style="margin-top:30px;" onclick="submitResponse()">
+        MANDA — SEND IT
+      </button>
+
+      <div id="submit-confirm" class="hidden" style="margin-top:20px;">
+        <p class="mono green" style="font-size:14px;">Ricevuto. Peter will see this.</p>
+        <p class="mono dim" style="font-size:11px; margin-top:8px;">The table is set. Now we eat.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:60px; border-top:1px solid #222; padding-top:30px;">
+      <p class="mono dim" style="font-size:11px; font-style:italic;">
+        "La famiglia non si sceglie, si costruisce."<br>
+        <span style="color:#333;">You don't choose family. You build it.</span>
+      </p>
+      <p class="mono" style="margin-top:20px; font-size:10px; color:#222;">
+        Renzo — Session 208 — March 18, 2026<br>
+        Built from a terminal. Sent with respect.<br>
+        Capisce.
+      </p>
+    </div>
   </div>
 </div>
 
 <script>
+// File upload + submit
+function fileSelected(input) {
+  const name = input.files[0] ? input.files[0].name : '';
+  document.getElementById('file-name').textContent = name ? 'Selected: ' + name : '';
+}
+
+function submitResponse() {
+  const text = document.getElementById('leon-response').value;
+  const file = document.getElementById('leon-file').files[0];
+
+  if (!text && !file) {
+    document.getElementById('leon-response').style.borderColor = '#ff4444';
+    setTimeout(() => { document.getElementById('leon-response').style.borderColor = '#333'; }, 1500);
+    return;
+  }
+
+  // For now just show confirmation - Peter gets it via email/screenshot
+  document.getElementById('submit-confirm').classList.remove('hidden');
+
+  // Email the response (mailto fallback)
+  const subject = encodeURIComponent('Leon Response — La Tavola');
+  const body = encodeURIComponent('Leon wrote:\n\n' + text + '\n\n— Sent from leon-reveal.onrender.com');
+  // Open mailto as backup
+  window.open('mailto:pwnetsuite@outlook.com?subject=' + subject + '&body=' + body, '_blank');
+}
+
 // Build Miami skyline
 const skyline = document.getElementById('skyline');
 const heights = [80,120,60,140,90,160,70,130,50,180,100,150,65,110,85,170,95,125,55,145,75,135,200,60,115,88,155,72,128,62];
