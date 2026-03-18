@@ -4,8 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hey Leon</title>
-<!-- Mylo - Drop The Pressure -->
-<iframe id="music" width="0" height="0" style="display:none;" allow="autoplay" src=""></iframe>
+<!-- Music layers -->
+<iframe id="music1" width="0" height="0" style="display:none;" allow="autoplay"
+  src="https://www.youtube.com/embed/Zy4uiiy0qgA?autoplay=1&loop=1&playlist=Zy4uiiy0qgA&controls=0&start=0"></iframe>
+<iframe id="music2" width="0" height="0" style="display:none;" allow="autoplay" src=""></iframe>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&display=swap');
 
@@ -297,7 +299,7 @@ tr:hover td { background: #1a1a1a; }
 <div class="screen active" id="s1">
   <div class="big-text white">Hey Leon.</div>
   <p class="mono dim" style="margin-top:20px; font-size:14px;">It's not Sinton.ia this time.</p>
-  <button class="btn" onclick="startMusic(); go(2)">Who is this?</button>
+  <button class="btn" onclick="switchMusic(); go(2)">Who is this?</button>
 </div>
 
 <!-- SCREEN 2: The Name -->
@@ -542,12 +544,10 @@ tr:hover td { background: #1a1a1a; }
 </div>
 
 <script>
-let musicStarted = false;
-function startMusic() {
-  if (musicStarted) return;
-  musicStarted = true;
-  // YouTube embed with autoplay - Mylo - Drop The Pressure
-  document.getElementById('music').src = 'https://www.youtube.com/embed/sFZjqVnWBhc?autoplay=1&loop=1&playlist=sFZjqVnWBhc&controls=0';
+function switchMusic() {
+  // Kill You've Got a Friend in Me, start Tiesto - Urban Train
+  document.getElementById('music1').src = '';
+  document.getElementById('music2').src = 'https://www.youtube.com/embed/bl6RJGZfSes?autoplay=1&loop=1&playlist=bl6RJGZfSes&controls=0';
 }
 
 let wrongClicks = 0;
