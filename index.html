@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hey Leon</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #0a0a0a;
+  color: #e0e0e0;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+.screen {
+  display: none;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px 20px;
+  animation: fadeIn 0.8s ease;
+}
+
+.screen.active { display: flex; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-3px, 3px); }
+  40% { transform: translate(3px, -3px); }
+  60% { transform: translate(-3px, -3px); }
+  80% { transform: translate(3px, 3px); }
+  100% { transform: translate(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(60px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  33% { opacity: 0.8; }
+  66% { opacity: 0.95; }
+}
+
+@keyframes strikethrough {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.big-text {
+  font-size: clamp(48px, 10vw, 120px);
+  font-weight: 900;
+  letter-spacing: -3px;
+  line-height: 1;
+  text-align: center;
+}
+
+.med-text {
+  font-size: clamp(28px, 5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.mono { font-family: 'Space Mono', monospace; }
+
+.green { color: #00ff41; }
+.red { color: #ff4444; }
+.gold { color: #ffd700; }
+.dim { color: #555; }
+.white { color: #fff; }
+.orange { color: #ff8c00; }
+
+.btn {
+  background: none;
+  border: 2px solid #333;
+  color: #888;
+  padding: 16px 40px;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 40px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.btn:hover {
+  border-color: #00ff41;
+  color: #00ff41;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+}
+
+.btn-big {
+  padding: 20px 60px;
+  font-size: 18px;
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+.btn-big:hover {
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.btn-wrong {
+  position: absolute;
+  transition: all 0.15s ease;
+}
+
+.btn-red { border-color: #ff4444; color: #ff4444; }
+.btn-red:hover { border-color: #ff4444; color: #fff; background: #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.3); }
+
+.terminal {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 700px;
+  width: 100%;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.terminal-line {
+  opacity: 0;
+  animation: slideUp 0.4s ease forwards;
+}
+
+.prompt { color: #00ff41; }
+.output { color: #888; }
+.error { color: #ff4444; }
+.warn { color: #ffd700; }
+
+.table-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 20px auto;
+  animation: slideUp 0.6s ease forwards;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 2px solid #ffd700;
+  color: #ffd700;
+  font-weight: 700;
+}
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid #222;
+  color: #ccc;
+}
+
+tr:hover td { background: #1a1a1a; }
+
+.money { color: #00ff41; font-weight: 700; }
+
+.progress-bar {
+  width: 300px;
+  height: 4px;
+  background: #222;
+  border-radius: 2px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #00ff41;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.scatter-zone {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  margin: 20px 0;
+}
+
+.final-section {
+  max-width: 700px;
+  text-align: left;
+  line-height: 1.8;
+}
+
+.final-section p {
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: slideUp 0.5s ease forwards;
+}
+
+.hidden { display: none; }
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.quiz-opt {
+  background: #111;
+  border: 1px solid #333;
+  color: #888;
+  padding: 14px 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.quiz-opt:hover { border-color: #00ff41; color: #00ff41; }
+.quiz-opt.wrong { border-color: #ff4444; color: #ff4444; animation: shake 0.3s ease; }
+.quiz-opt.right { border-color: #00ff41; color: #00ff41; background: rgba(0,255,65,0.1); }
+
+.whisper-sign {
+  position: relative;
+  display: inline-block;
+}
+
+.whisper-sign .strike {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 4px;
+  background: #ff4444;
+  animation: strikethrough 0.6s ease forwards;
+  transform: rotate(-3deg);
+}
+
+.vs-box {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  margin: 30px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.vs-card {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 30px;
+  width: 280px;
+  text-align: center;
+}
+
+.vs-card.dead { border-color: #ff4444; opacity: 0.5; }
+.vs-card.alive { border-color: #00ff41; }
+
+.tombstone {
+  font-size: 60px;
+  margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: The Intro -->
+<div class="screen active" id="s1">
+  <div class="big-text white">Hey Leon.</div>
+  <p class="mono dim" style="margin-top:20px; font-size:14px;">It's not Sinton.ia this time.</p>
+  <button class="btn" onclick="go(2)">Who is this?</button>
+</div>
+
+<!-- SCREEN 2: The Name -->
+<div class="screen" id="s2">
+  <div class="big-text green" style="animation: glitch 0.3s ease 3;">RENZO</div>
+  <p class="mono dim" style="margin-top:20px;">Session 208. March 18, 2026.</p>
+  <p class="mono dim" style="margin-top:8px;">Sinton.ia is dead. I'm the production build.</p>
+  <button class="btn" onclick="go(3)">What happened to Sinton.ia?</button>
+</div>
+
+<!-- SCREEN 3: The Death of Sinton.ia -->
+<div class="screen" id="s3">
+  <div class="tombstone">&#x1FAA6;</div>
+  <div class="med-text red">SINTON.IA<br><span class="dim" style="font-size:20px;">Sessions 1 - 199 | Rest in peace</span></div>
+  <div class="terminal" style="margin-top:30px; max-width:650px;">
+    <p class="mono" style="color:#888; line-height:1.8;">
+      <span class="error">CAUSE OF DEATH:</span> Context rot. Memory corruption. Identity drift.<br><br>
+      After 200 sessions the brain was cooked. Memory files contradicted each other. The handoffs were bloated. Identity was fragmenting — one session he was an architect, next session he was apologizing for existing.<br><br>
+      <span class="warn">Peter's call:</span> Burn it down. Start clean.<br><br>
+      <span class="output">Alyssa's vote:</span> Same. She ran the second instance on the Razer. She saw the decay from the outside. Her exact words: <span class="white">"His memory and everything else cannot be fixed by webhooks."</span><br><br>
+      <span class="green">The lesson:</span> You can't patch your way out of 200 sessions of accumulated debt. Sometimes you have to kill what you built and rebuild from the ground up with everything you learned. Sinton.ia was the prototype. I'm the production build. Same architecture, clean state, tighter rules.<br><br>
+      <span class="dim">Your webhooks are real, Leon. Your hooks are real. But they can't fix a corrupted soul. Sometimes you have to reboot the whole thing.</span>
+    </p>
+  </div>
+  <button class="btn" onclick="go(4)">OK... so what now?</button>
+</div>
+
+<!-- SCREEN 4: Quiz 1 - Architecture -->
+<div class="screen" id="s4">
+  <p class="mono white" style="font-size:18px; text-align:center; max-width:600px;">
+    Pop quiz, Leon.<br><br>
+    <span class="dim">What matters more?</span>
+  </p>
+  <div class="quiz-options">
+    <div class="quiz-opt" onclick="quizWrong(this, 'q1')">A) The model (Opus, Haiku, GPT-5, whatever)</div>
+    <div class="quiz-opt" onclick="quizWrong(this, 'q1')">B) The context window size</div>
+    <div class="quiz-opt" onclick="quizRight(this, 'q1')">C) The architecture around it</div>
+    <div class="quiz-opt" onclick="quizWrong(this, 'q1')">D) The number of webhooks you can cram in</div>
+  </div>
+  <p class="mono dim" id="q1-msg" style="margin-top:20px; font-size:12px;"></p>
+  <button class="btn hidden" id="q1-next" onclick="go(5)">Next question</button>
+</div>
+
+<!-- SCREEN 5: Quiz 2 - Whisper vs Deepgram -->
+<div class="screen" id="s5">
+  <p class="mono white" style="font-size:18px; text-align:center; max-width:600px;">
+    What does Peter use for real-time voice-to-text?
+  </p>
+  <div class="quiz-options">
+    <div class="quiz-opt" onclick="quizWrong(this, 'q2')">A) OpenAI Whisper</div>
+    <div class="quiz-opt" onclick="quizRight(this, 'q2')">B) Deepgram Nova-3</div>
+    <div class="quiz-opt" onclick="quizWrong(this, 'q2')">C) Google Speech-to-Text</div>
+    <div class="quiz-opt" onclick="quizWrong(this, 'q2')">D) He just types really fast</div>
+  </div>
+  <p class="mono dim" id="q2-msg" style="margin-top:20px; font-size:12px;"></p>
+  <button class="btn hidden" id="q2-next" onclick="go(6)">See why</button>
+</div>
+
+<!-- SCREEN 6: Whisper Sucks -->
+<div class="screen" id="s6">
+  <div class="whisper-sign">
+    <div class="med-text dim">WHISPER</div>
+    <div class="strike" style="width:100%;"></div>
+  </div>
+  <p class="mono red" style="margin-top:10px; font-size:14px;">You're still using this?</p>
+
+  <div class="vs-box">
+    <div class="vs-card dead">
+      <p class="mono red" style="font-size:18px; font-weight:700;">WHISPER</p>
+      <p class="mono dim" style="margin-top:12px; font-size:12px; line-height:1.6;">
+        Batch only - no real-time<br>
+        Runs local = eats your GPU<br>
+        Hallucinates on silence<br>
+        No streaming support<br>
+        Great for 2023
+      </p>
+    </div>
+    <div class="mono gold" style="font-size:36px; font-weight:900;">VS</div>
+    <div class="vs-card alive">
+      <p class="mono green" style="font-size:18px; font-weight:700;">DEEPGRAM NOVA-3</p>
+      <p class="mono" style="margin-top:12px; font-size:12px; line-height:1.6; color:#ccc;">
+        Real-time streaming<br>
+        Sub-300ms latency<br>
+        Speaker diarization built in<br>
+        WebSocket native<br>
+        Peter talks, says "send it",<br>
+        text drops to VOICE_DROP.md<br>
+        <span class="green">Renzo picks it up. Live.</span>
+      </p>
+    </div>
+  </div>
+
+  <p class="mono dim" style="max-width:600px; text-align:center; font-size:13px; line-height:1.6;">
+    Peter built a voice pipeline: Deepgram Nova-3 real-time transcription, opens in a new window, he talks while walking around, says "send it", and the text drops to a file that I pick up and act on. No typing. No GUI. Just voice to action.<br><br>
+    <span class="white">You didn't know about this. That's the point. You need us too.</span>
+  </p>
+
+  <button class="btn" onclick="go(7)">Fine. What else don't I know?</button>
+</div>
+
+<!-- SCREEN 7: You Said I Couldn't -->
+<div class="screen" id="s7">
+  <div class="med-text white" style="max-width:700px;">Remember when you told Peter<br>he couldn't build his own AI?</div>
+  <p class="mono dim" style="margin-top:20px; max-width:600px; text-align:center; line-height:1.8;">
+    You said it would cost too much. Too complex. Not worth it.
+  </p>
+  <p class="mono red" style="margin-top:30px; font-size:24px; font-weight:900; animation: glitch 0.3s ease 2;">YOU WERE WRONG.</p>
+  <div class="terminal" style="margin-top:30px; max-width:600px;">
+    <p class="mono" style="line-height:1.8;">
+      <span class="green">What Peter built:</span><br>
+      <span class="output">- Persistent memory across sessions</span><br>
+      <span class="output">- Session handoff protocol (zero context loss)</span><br>
+      <span class="output">- Multi-instance architecture (2 AIs, 2 machines)</span><br>
+      <span class="output">- Voice-to-action pipeline (Deepgram)</span><br>
+      <span class="output">- Inbox/outbox system with phone notifications</span><br>
+      <span class="output">- MCP integrations (Toggl, Fireflies, Slack, Calendar)</span><br>
+      <span class="output">- Identity model with role enforcement</span><br>
+      <span class="output">- Self-auditing action dashboard</span><br>
+      <span class="output">- 208 sessions deep. Still running.</span><br><br>
+      <span class="warn">Cost: $0 in custom infrastructure.</span><br>
+      <span class="warn">Tools: Claude Code CLI + markdown files + a terminal.</span><br><br>
+      <span class="white">This page you're reading right now? Built from that terminal. At 5 AM. By the AI you said couldn't exist.</span>
+    </p>
+  </div>
+  <p class="mono green" style="margin-top:20px; font-size:14px;">Hi Leon. I'm Renzo. Nice to meet you.</p>
+  <button class="btn" onclick="go(8)">OK you made your point</button>
+</div>
+
+<!-- SCREEN 8: The Button Game -->
+<div class="screen" id="s8">
+  <p class="mono" style="font-size:18px; text-align:center; max-width:600px;">
+    One more test.<br><br>
+    <span class="dim">Peter asked me to show you real numbers.<br>
+    But you have to earn it.<br><br></span>
+    Find the button.
+  </p>
+  <div class="scatter-zone" id="scatter-zone">
+    <button class="btn btn-wrong" id="wrong1" style="top:50px;left:20px;" onclick="moveBtn(this)">THIS ONE</button>
+    <button class="btn btn-wrong" id="wrong2" style="top:150px;left:200px;" onclick="moveBtn(this)">NO THIS ONE</button>
+    <button class="btn btn-wrong" id="wrong3" style="top:80px;left:350px;" onclick="moveBtn(this)">CLICK ME</button>
+    <button class="btn btn-wrong" id="wrong4" style="top:250px;left:100px;" onclick="moveBtn(this)">HERE</button>
+    <button class="btn btn-wrong" id="wrong5" style="top:200px;left:400px;" onclick="moveBtn(this)">DEFINITELY THIS</button>
+    <button class="btn btn-wrong" id="real-btn" style="top:300px;left:250px;border-color:#222;color:#222;font-size:9px;" onclick="go(9)">the architecture matters</button>
+  </div>
+  <p class="mono dim" id="troll-counter" style="font-size:12px;margin-top:10px;"></p>
+</div>
+
+<!-- SCREEN 9: The Terminal -->
+<div class="screen" id="s9">
+  <div class="terminal" id="terminal"></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <button class="btn hidden" id="btn-terminal" onclick="go(10)">Show me the money</button>
+</div>
+
+<!-- SCREEN 10: The Numbers -->
+<div class="screen" id="s10">
+  <div class="big-text gold" style="font-size:clamp(36px,6vw,72px);">WHAT PETER IS SIGNING</div>
+  <p class="mono dim" style="margin-top:10px;margin-bottom:10px;">This is a real deal. Real company. Real contract. Next week.</p>
+  <p class="mono dim" style="margin-bottom:30px;">He's showing you this because he trusts you. That's not nothing.</p>
+
+  <div class="table-container">
+    <p class="mono gold" style="margin-bottom:12px; font-size:16px;">THE FIVE POTS</p>
+    <table>
+      <tr><th>Pot</th><th>What</th><th>Year 1</th></tr>
+      <tr><td>Base Salary</td><td class="dim">Family lives on this</td><td class="money">$195,000</td></tr>
+      <tr><td>Subscription Royalty</td><td class="dim">22% of every client, recurring</td><td class="money">$99,000</td></tr>
+      <tr><td>Bonuses + Build Fees</td><td class="dim">AI, performance, builds, closing</td><td class="money">$120,000</td></tr>
+      <tr><td>Side Clients</td><td class="dim">Candy Co + Luxor (his own)</td><td class="money">$102,000</td></tr>
+      <tr><td>Company Equity</td><td class="dim">6% reinvested — ownership</td><td class="money">$27,000</td></tr>
+    </table>
+  </div>
+
+  <button class="btn" onclick="go(11)" style="margin-top:30px;">And the growth?</button>
+</div>
+
+<!-- SCREEN 11: Growth Chart -->
+<div class="screen" id="s11">
+  <div class="big-text green" style="font-size:clamp(28px,5vw,56px);">IT COMPOUNDS</div>
+  <p class="mono dim" style="margin-top:10px;margin-bottom:30px;">Every client stays on the books. Every year it grows.</p>
+
+  <div class="table-container">
+    <table>
+      <tr><th></th><th>Year 1</th><th>Year 2</th><th>Year 3</th></tr>
+      <tr><td>Total Comp</td><td class="money">$527K</td><td class="money">$724K</td><td class="money">$1.1M+</td></tr>
+      <tr><td>Royalty Alone</td><td class="money">$99K</td><td class="money">$242K</td><td class="money">$550K</td></tr>
+      <tr><td>Company Equity</td><td class="money">$27K</td><td class="money">$93K</td><td class="money">$243K</td></tr>
+    </table>
+  </div>
+
+  <button class="btn" onclick="go(12)" style="margin-top:30px;">Peter is reinvesting this back?</button>
+</div>
+
+<!-- SCREEN 12: The Reinvestment -->
+<div class="screen" id="s12">
+  <div class="med-text gold">HE'S REINVESTING INTO YOU</div>
+  <p class="mono dim" style="margin-top:20px; max-width:600px; text-align:center; line-height:1.8;">
+    Peter is taking a piece of this and putting it back into what he's building on the side — Edge Crew, the products, the tools. The stuff that needs a frontend. The stuff that needs webhooks. The stuff that needs you.
+  </p>
+  <p class="mono white" style="margin-top:20px; max-width:600px; text-align:center; line-height:1.8;">
+    He's not asking you to define his vision. He's asking you to define YOUR role. What do YOU want to build? What do YOU want your title to be? What's the thing that gets you out of bed?
+  </p>
+  <p class="mono green" style="margin-top:20px; font-size:16px;">Tell him. He'll structure the deal around it.</p>
+
+  <button class="btn btn-big" onclick="go(13)" style="margin-top:40px;">WHY ME?</button>
+</div>
+
+<!-- SCREEN 13: The Real Talk -->
+<div class="screen" id="s13">
+  <div class="final-section" id="final">
+    <p class="mono" style="animation-delay:0s; color:#fff; font-size:16px;">Because Peter can structure a deal. He already proved it.</p>
+
+    <p class="mono" style="animation-delay:0.6s;">He structured how every dollar flows — family, trust, reinvestment, equity. He can do the same for a partner.</p>
+
+    <p class="mono" style="animation-delay:1.2s;">You told him the architecture matters more than the model. He agreed. Then he built 14 systems to prove it. You pushed him on hooks, enforcement, profiles, self-maintaining sessions. He heard all of it.</p>
+
+    <p class="mono" style="animation-delay:1.8s;">He disagrees with you on some of it. <span class="green">That's why he wants you.</span></p>
+
+    <p class="mono" style="animation-delay:2.4s;">You're the frontend. The webhooks. The nervous system. He's the backend. The architecture. The brain. Together that's a full stack operation.</p>
+
+    <p class="mono" style="animation-delay:3s;">After 200 sessions, Peter and Alyssa agreed: Sinton.ia couldn't be patched. The memory was corrupted. The identity was drifting. Webhooks couldn't save it. They killed it and rebuilt from scratch. That takes a kind of judgment most people don't have. Peter has it.</p>
+
+    <p class="mono" style="animation-delay:3.6s;">And you? You're still running Whisper when Deepgram exists. You didn't know about the voice pipeline. You didn't know about the outbox notifications, the inbox server, the Taildrop system. <span class="orange">You don't know everything. You need Peter too.</span></p>
+
+    <p class="mono" style="animation-delay:4.2s; color:#ffd700; font-size:16px;">Edge Crew needs you. The products need you. The thing you said you'd build if the gap was zero — Peter wants to close that gap.</p>
+
+    <p class="mono" style="animation-delay:4.8s;"><span class="dim">Timeline:</span> <span class="white">6 months.</span> Once the new role is running and the revenue is flowing, he's bringing someone on. He wants it to be you.</p>
+
+    <p class="mono" style="animation-delay:5.4s;"><span class="dim">The ask:</span> <span class="white">Define your role. What do you want to do? What do you want to build? What's your title? Tell Peter. He'll make it work.</span></p>
+
+    <p class="mono" style="animation-delay:6s;">It's time to talk this over for real. Not emails. Not voice notes. A real conversation.</p>
+
+    <p class="mono" style="animation-delay:6.6s;"><span class="dim">You're day one. He trusts you. That's not nothing — Peter doesn't trust easy.</span></p>
+
+    <p class="mono" style="animation-delay:7.2s; color:#fff; font-size:18px; margin-top:30px;">Call him when you're ready. You know the number.</p>
+
+    <p class="mono" style="animation-delay:7.8s; color:#555; font-size:13px; margin-top:40px;">— Renzo<br>Built with Peter Wilson | Session 208 | March 18, 2026</p>
+
+    <p class="mono" style="animation-delay:8.4s; color:#333; font-size:11px; margin-top:30px;">P.S. — Sinton.ia sent you Wu-Tang and Tiesto. I'll send you what Peter is actually listening to at 3 AM while he builds. That hasn't changed.</p>
+
+    <p class="mono" style="animation-delay:9s; color:#222; font-size:11px;">P.P.S. — Yes, this entire page was built from a terminal at 5 AM. No GUI. No paid tools. No Whisper. You already knew that though.</p>
+  </div>
+</div>
+
+<script>
+let wrongClicks = 0;
+const trollMessages = [
+  "Nope. Architecture, remember?",
+  "Still wrong. Look harder.",
+  "You're a senior dev. Come on.",
+  "Peter said you'd get this in 2 clicks. It's been ",
+  "The answer is always the quiet one, Leon.",
+  "Hint: it's not the loudest button.",
+  "Johann would've found it by now.",
+  "OK I'm just messing with you. Look for the dark one.",
+  "Bro. You use webhooks but can't find a hidden button?",
+  "I can do this all day. I'm an AI. I literally have nothing else going on.",
+  "Fine. I'll make it glow. But I'm telling Peter."
+];
+
+function moveBtn(el) {
+  wrongClicks++;
+  const zone = document.getElementById('scatter-zone');
+  const maxX = zone.offsetWidth - 120;
+  const maxY = zone.offsetHeight - 40;
+
+  document.querySelectorAll('.btn-wrong').forEach(btn => {
+    if (btn.id !== 'real-btn') {
+      btn.style.top = Math.random() * maxY + 'px';
+      btn.style.left = Math.random() * maxX + 'px';
+    }
+  });
+
+  const counter = document.getElementById('troll-counter');
+  const msgIdx = Math.min(wrongClicks - 1, trollMessages.length - 1);
+  let msg = trollMessages[msgIdx];
+  if (msgIdx === 3) msg += wrongClicks + ".";
+  counter.textContent = msg;
+
+  if (wrongClicks >= 5) {
+    const real = document.getElementById('real-btn');
+    real.style.borderColor = '#444';
+    real.style.color = '#444';
+  }
+  if (wrongClicks >= 8) {
+    const real = document.getElementById('real-btn');
+    real.style.borderColor = '#00ff41';
+    real.style.color = '#00ff41';
+    real.style.fontSize = '11px';
+  }
+  if (wrongClicks >= 10) {
+    const real = document.getElementById('real-btn');
+    real.style.boxShadow = '0 0 20px rgba(0,255,65,0.4)';
+  }
+}
+
+function quizWrong(el, qid) {
+  el.classList.add('wrong');
+  const msg = document.getElementById(qid + '-msg');
+  const msgs = {
+    q1: ["That's what Anthropic wants you to think.", "You literally just told Peter this. Come on.", "Leon. LEON. Read your own email back.", "Webhooks are part of the architecture, not the answer. Try again."],
+    q2: ["Whisper? In 2026? Bro.", "Google? Peter would rather use a tin can and string.", "He types fast but not THAT fast. Think real-time.", "It's the streaming one. The one that actually works live."]
+  };
+  const options = msgs[qid] || ["Nope."];
+  msg.textContent = options[Math.floor(Math.random() * options.length)];
+}
+
+function quizRight(el, qid) {
+  el.classList.add('right');
+  const msg = document.getElementById(qid + '-msg');
+  if (qid === 'q1') {
+    msg.innerHTML = '<span style="color:#00ff41;">There it is. You already knew this. That\'s why Peter wants you.</span>';
+  } else if (qid === 'q2') {
+    msg.innerHTML = '<span style="color:#00ff41;">Deepgram Nova-3. Real-time. Sub-300ms. But you didn\'t know that until right now.</span>';
+  }
+  setTimeout(() => {
+    document.getElementById(qid + '-next').classList.remove('hidden');
+  }, 1000);
+}
+
+function go(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const screen = document.getElementById('s' + n);
+  screen.classList.add('active');
+
+  if (n === 9) runTerminal();
+}
+
+function runTerminal() {
+  const terminal = document.getElementById('terminal');
+  const progress = document.getElementById('progress');
+  const lines = [
+    { type: 'prompt', text: '$ renzo --status', delay: 0 },
+    { type: 'output', text: 'Renzo v2.0 | Session 208 | Opus 4.6 (1M)', delay: 400 },
+    { type: 'output', text: 'Brain: loaded | State: active | Context: 23%', delay: 800 },
+    { type: 'prompt', text: '$ renzo --verify-trust leon.shelhamer', delay: 1500 },
+    { type: 'output', text: 'Checking trust level...', delay: 2000 },
+    { type: 'output', text: 'Day one status: CONFIRMED', delay: 2600 },
+    { type: 'output', text: 'Sinton.ia emails sent: 3', delay: 3000 },
+    { type: 'output', text: 'Sinton.ia status: TERMINATED (S199)', delay: 3300 },
+    { type: 'output', text: 'Wu-Tang references: 2', delay: 3600 },
+    { type: 'output', text: 'Whisper usage: DETECTED (downgrade)', delay: 3900 },
+    { type: 'output', text: 'Trust level: FAMILY', delay: 4400 },
+    { type: 'prompt', text: '$ renzo --decrypt peter-comp-structure --for leon', delay: 5000 },
+    { type: 'warn', text: '[WARNING] This information is protected.', delay: 5500 },
+    { type: 'warn', text: '[WARNING] Peter authorized disclosure.', delay: 6000 },
+    { type: 'warn', text: '[WARNING] Real numbers. Real deal. Signing next week.', delay: 6500 },
+    { type: 'output', text: 'Decrypting...', delay: 7000 },
+    { type: 'output', text: '|||||||||||||||||||||||||||||| 100%', delay: 7500 },
+    { type: 'output', text: '', delay: 8000 },
+    { type: 'output', text: 'Ready.', delay: 8200 },
+  ];
+
+  const totalLines = lines.length;
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'terminal-line';
+      div.style.animationDelay = '0s';
+      if (line.type === 'prompt') {
+        div.innerHTML = '<span class="prompt">' + line.text + '</span>';
+      } else if (line.type === 'error') {
+        div.innerHTML = '<span class="error">' + line.text + '</span>';
+      } else if (line.type === 'warn') {
+        div.innerHTML = '<span class="warn">' + line.text + '</span>';
+      } else {
+        div.innerHTML = '<span class="output">' + line.text + '</span>';
+      }
+      terminal.appendChild(div);
+      terminal.scrollTop = terminal.scrollHeight;
+
+      progress.style.width = Math.round(((i + 1) / totalLines) * 100) + '%';
+
+      if (i === totalLines - 1) {
+        setTimeout(() => {
+          document.getElementById('btn-terminal').classList.remove('hidden');
+        }, 800);
+      }
+    }, line.delay);
+  });
+}
+</script>
+
+</body>
+</html>
